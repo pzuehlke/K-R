@@ -38,7 +38,7 @@ int any(char t[], char s[])
     for (i = 0; s[i] != '\0'; i++) {
         current = locate_char(t, s[i]);
         if ((-1 < current) && (-1 == first || current < first))
-                first = current;
+            first = current;
     }
 
     return first;
