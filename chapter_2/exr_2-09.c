@@ -35,9 +35,11 @@ int bitcount(unsigned x)
  * representation as n = (ab)_2 where:
  *  - b = 100...0 (of length, say, m bits). That is, b consists of the
  *    rightmost 1 bit and whatever comes after that;
- *  - a is whatever sequence of bits is to the left of the rightmost 1 bit
- * Then x - 1 equals (ac)_2, where c is the negation of b:
- *  - c = 011...1 (m bits) .
+ *  - a is whatever sequence of bits is to the left of the rightmost 1 bit.
+ *
+ * Then x - 1 equals (ac)_2, where c is the inverse of b:
+ *  - c = 011...1 (negate each of the m bits of b) .
+ *
  * Consequently x & (x - 1) equals (ad)_2 where d = 000...0 (m bits). It
  * follows that everytime this operation is performed, we delete the rightmost
  * 1 bit of the current value of x, leaving the remaining bits unchanged.
