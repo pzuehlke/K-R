@@ -3,8 +3,17 @@
 
 # define TABSTOP 8
 
+int detab(void);
+
 
 int main(void)
+{
+    detab();
+    return 0;
+}
+
+
+int detab(void)
 {
     int i = 0, position = 0, next;
     char c;

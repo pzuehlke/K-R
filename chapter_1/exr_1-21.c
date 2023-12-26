@@ -2,36 +2,47 @@
 # include <stdio.h>
 
 # define TABSTOP 8
-# define BLANK 1
-# define NONBLANK 0
+
+
+int entab(void);
 
 
 int main(void)
 {
-    int i = 0, tabs = 0, spaces = 0, blank_count = 0;
-    int next, position = 0;
-    char c;
-    char state = NONBLANK; 
+    entab();
+    return 0;
+}
+
+
+int entab(void)
+{
+    int c;
+    int space_count = 0;    // pending spaces
+    int position = 0;       // position of the cursor (incl. pending spaces)
 
     while ((c = getchar()) != EOF) {
         if (c == ' ') {
-            state = BLANK;
-            blank_count++;
+            space_count++;
+            if (position % TABSTOP == TABSTOP - 1) {
+                putchar('\t');      // Output tab to avoid using spaces
+                space_count = 0;
+            }
         }
         else {
-            if (state == BLANK) {
-                tabs = blank_count / TABSTOP;
-                spaces = blank_count % TABSTOP;
-                for (i = 0; i < tabs; i++)
-                    putchar('\t');
-                for (i = 0; i < spaces; i++)
-                    putchar(' ');
+            while (space_count > 0) {  // Output pending spaces (< TABSTOP)
+                putchar(' ');
+                space_count--;
             }
-            state = NONBLANK;
-            blank_count = 0;
             putchar(c);
+            if (c == '\n') {
+                position = -1;      // The -1 will be removed below
+            }
+            else if (c == '\t') {
+                position += (TABSTOP - position % TABSTOP) - 1; 
+                // The -1 will be removed below
+            }
         }
+        position++; // In all cases, increment position by 1
     }
-
     return 0;
 }
