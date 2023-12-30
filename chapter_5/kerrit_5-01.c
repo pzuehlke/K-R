@@ -1,7 +1,8 @@
 /* Following S. 5.1 of Kernighan and Ritchie, "The C Programming Language" */
 #include <stdio.h>
 
-int main(void) {
+int main(void)
+{
     int x = 1, y = 2, z[10] = {5, 6, 7};
     int *ip;            /* ip is a pointer to int */
 
