@@ -1,4 +1,4 @@
-/* Solution to Exercise 6-3 of K&R */
+/* Solution to Exercise 6-4 of K&R */
 
 #include <stdio.h>
 #include <stdlib.h>
