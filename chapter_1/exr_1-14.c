@@ -1,5 +1,11 @@
-/* Solution to Exercise 1-14 of K&R */
+/*****************************************************************************
+ * The C Programming Language (2nd., ANSI C ed.) by Kernighan and Ritchie
+ * Exercise 1.14
+ * Author: pzuehlke
+ ****************************************************************************/
+
 #include <stdio.h>
+
 #define ASCII_SIZE 128  // Size of the ASCII character set
 
 /* Prints a histogram of the frequencies of characters in the input. */

@@ -1,4 +1,8 @@
-/* Solution to Exercise 1-11 of K&R */
+/*****************************************************************************
+ * The C Programming Language (2nd., ANSI C ed.) by Kernighan and Ritchie
+ * Exercise 1.11
+ * Author: pzuehlke
+ ****************************************************************************/
 
 /* 
 Here are some test cases to consider:
@@ -12,10 +16,9 @@ Here are some test cases to consider:
   return a word count of 1.
 
 * Input with multiple words separated by various kinds of whitespace (spaces,
-  tabs, newlines): The word count should equal the number of words.
-
-* Input with non-alphabetic characters within and between words: The program
-  should correctly identify what constitutes a word.
+  tabs, newlines), including combinations of these such as a whitespace
+  immediately followed by a newline and a tab: The word count should equal the
+  number of words.
 
 * Very long input: This checks whether the program can handle large data.
 

@@ -1,5 +1,10 @@
-/* Solution to Exercise 1-2 of K&R */
-# include <stdio.h>
+/*****************************************************************************
+ * The C Programming Language (2nd., ANSI C ed.) by Kernighan and Ritchie
+ * Exercise 1.1
+ * Author: pzuehlke
+ ****************************************************************************/
+
+#include <stdio.h>
 
 int main() {
     printf("Hello, world!\a\n");

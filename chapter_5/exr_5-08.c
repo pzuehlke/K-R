@@ -1,4 +1,9 @@
-/* Solution to Exercise 5-8 of K&R */
+/*****************************************************************************
+ * The C Programming Language (2nd., ANSI C ed.) by Kernighan and Ritchie
+ * Exercise 5-08
+ * Author: pzuehlke
+ ****************************************************************************/
+
 #include <stdio.h>
 
 int day_of_year(int year, int month, int day);
@@ -20,9 +25,7 @@ int day_of_year(int year, int month, int day) {
         return -1; // Invalid day for the given month
     }
 
-    for (i = 1; i < month; i++) {
-        day += daytab[leap][i];
-    }
+    for (i = 1; i < month; i++) { day += daytab[leap][i]; }
     return day;
 }
 
@@ -40,9 +43,7 @@ void month_day(int year, int yearday, int *pmonth, int *pday) {
         return; // Invalid yearday for the given year
     }
 
-    for (i = 1; yearday > daytab[leap][i]; i++) {
-        yearday -= daytab[leap][i];
-    }
+    for (i = 1; yearday > daytab[leap][i]; i++) { yearday -= daytab[leap][i]; }
     *pmonth = i;
     *pday = yearday;
 }
@@ -53,7 +54,7 @@ int main(void)
     int year, month, day, yearday;
     int test_month, test_day;
 
-    // Test cases for day_of_year
+    // Test cases for day_of_year:
     printf("Testing day_of_year function:\n");
     year = 2020; month = 2; day = 29; // Leap year
     printf("Day of year for %d/%02d/%02d: %d\n",
@@ -67,7 +68,7 @@ int main(void)
     printf("Day of year for %d/%02d/%02d: %d\n",
             year, month, day, day_of_year(year, month, day));
 
-    // Test cases for month_day
+    // Test cases for month_day:
     printf("\nTesting month_day function:\n");
     year = 2020; yearday = 60; // Leap year, Feb 29
     month_day(year, yearday, &test_month, &test_day);

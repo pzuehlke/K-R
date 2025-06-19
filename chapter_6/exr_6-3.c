@@ -1,144 +1,179 @@
-/* Solution to Exercise 6-3 of K&R */
+/*****************************************************************************
+ * The C Programming Language (2nd., ANSI C ed.) by Kernighan and Ritchie
+ * Exercise 6-03
+ * Author: pzuehlke
+ ****************************************************************************/
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
+#include <stdlib.h>
 #include <ctype.h>
 
 #define MAXWORD 100
+#define BUFSIZE 100
 #define MAXLINES 1000
 
-struct lnode {              // Structure to hold a list of line numbers
+struct line_list {
     int line;
-    struct lnode *next;
+    struct line_list* next;
 };
 
-struct tnode {              // The tree node:
-    char *word;             // Points to the text
-    struct lnode *lines;    // Points to the list of line numbers
-    struct tnode *left;     // Left child
-    struct tnode *right;    // Right child
+struct tnode {
+    char* word;
+    struct line_list* lines;
+    struct tnode* left;
+    struct tnode* right;
 };
 
-struct tnode *addtree(struct tnode *, char *, int);
-struct lnode *addline(struct lnode *, int);
-void treeprint(struct tnode *);
-int getword(char *, int);
-struct tnode *talloc(void);
-struct lnode *lalloc(void);
-char *strdup(const char *);
+struct tnode* talloc(void);
+struct line_list* append(struct line_list* list, int line);
+struct tnode* addtree(struct tnode* , char*, int line_number);
+void treeprint(struct tnode*);
+int getword(char*, int);
+int getch(void);
+void ungetch(int);
 
 
 int main() {
-    struct tnode *root = NULL;
+    struct tnode* root = NULL;
+    unsigned line_number = 1;
     char word[MAXWORD];
-    int line = 1;
-    int c;
 
-    // Read words from input:
-    while ((c = getword(word, MAXWORD)) != EOF) {
-        if (isalpha(word[0])) {
-            root = addtree(root, word, line);
+    while (getword(word, MAXWORD) != EOF) {
+        if (word[0] == '\0') {  // empty word indicates EOF
+            break;
         }
-        if (c == '\n') {
-            line++;
+        if (word[0] == '\n') {
+            ++line_number;
+            continue;
+        }
+        if (isalpha(word[0])) {  // valid variable name start
+            root = addtree(root, word, line_number);
         }
     }
-
-    // Print the words and their line numbers:
     treeprint(root);
-
     return 0;
 }
 
-/* addtree: add a word to the tree and record the line number */
-struct tnode *addtree(struct tnode *p, char *w, int line) {
-    int cond;
 
-    if (p == NULL) {
-        // New word:
+/* talloc: make a tnode */
+struct tnode *talloc(void)
+{
+    return (struct tnode *) malloc(sizeof(struct tnode));
+}
+
+
+/* append: append a new node to the end of list of line numbers */
+struct line_list* append(struct line_list* list, int line_number) {
+    struct line_list* previous = NULL;
+    for (struct line_list* current = list; current; current = current->next) {
+        if (current->line == line_number) {
+            return list;  // line already in the list, don't add
+        }
+        previous = current;
+    }
+    
+    // We've reached the end, previous is the last element (if any):
+    struct line_list* new_element = malloc(sizeof(struct line_list));
+    new_element->line = line_number;
+    new_element->next = NULL;
+    if (previous == NULL) { // list was empty
+        return new_element;
+    } else {
+        previous->next = new_element;
+        return list;
+    }
+}
+
+
+/* addtree: add a node with w, at or below p */
+struct tnode* addtree(struct tnode* p, char* w, int line_number)
+{
+    if (p == NULL) {        // create new node for word w
         p = talloc();
         p->word = strdup(w);
-        p->lines = addline(NULL, line);
+        p->lines = append(NULL, line_number);
         p->left = p->right = NULL;
-    } else if ((cond = strcmp(w, p->word)) == 0) {
-        // Repeated word:
-        p->lines = addline(p->lines, line);
-    } else if (cond < 0) {
-        // Less than, into left subtree:
-        p->left = addtree(p->left, w, line);
+    } else if (strcmp(w, p->word) > 0) {
+        p->right = addtree(p->right, w, line_number);
+    } else if (strcmp(w, p->word) < 0) {
+        p->left = addtree(p->left, w, line_number);
     } else {
-        // Greater than, into right subtree:
-        p->right = addtree(p->right, w, line);
+        p->lines = append(p->lines, line_number);
     }
     return p;
 }
 
-/* addline: add a line number to the list of lines */
-struct lnode *addline(struct lnode *p, int line) {
-    if (p == NULL) {
-        p = lalloc();
-        p->line = line;
-        p->next = NULL;
-    } else if (p->line != line) {
-        p->next = addline(p->next, line);
-    }
-    return p;
-}
 
-/* treeprint: print the tree of words and their line numbers */
-void treeprint(struct tnode *p) {
+/* treeprint: in-order print of tree p */
+void treeprint(struct tnode *p)
+{
     if (p != NULL) {
         treeprint(p->left);
-        printf("%s: ", p->word);
-        struct lnode *ln = p->lines;
-        while (ln != NULL) {
-            printf("%d ", ln->line);
-            ln = ln->next;
-        }
+
+        printf("* Word \"%s\" occurs in line(s):\n", p->word);
+        struct line_list* current = p->lines;
+        do {
+            printf("  ");
+            printf((current->next != NULL) ? "%d, " : "%d", current->line);
+            current = current->next;
+        } while (current != NULL);
         printf("\n");
+
         treeprint(p->right);
     }
 }
 
-/* getword: read the next word from input */
-int getword(char *word, int lim) {
+
+/* getword: get next word or character from input. Simplified version that
+   deals with general text documents (not necessarily C source code).  */
+int getword(char *word, int lim)
+{
     int c;
     char *w = word;
-
-    // Skip whitespace characters:
-    while (isspace(c = getchar()))
-        ;
-    if (c != EOF)
-        *w++ = c;
-    if (!isalpha(c)) {
-        *w = '\0';
-        return c;
-    }
-    for (; --lim > 0; w++) {
-        if (!isalnum(*w = getchar()) && *w != '_') {
-            ungetc(*w, stdin);
-            break;
+    
+    // Skip whitespace, but not newlines:
+    while (isspace(c = getch())) {
+        if (c == '\n') {
+            word[0] = '\n';  // Signal newline to main
+            word[1] = '\0';
+            return '\n';
         }
     }
+    
+    if (c != EOF)
+        *w++ = c;
+    
+    // Get word characters (letters, digits, underscore):
+    if (isalpha(c) || c == '_') {
+        for ( ; --lim > 0; w++) {
+            if (!isalnum(*w = getch()) && *w != '_') {
+                ungetch(*w);
+                break;
+            }
+        }
+    }
+    
     *w = '\0';
     return word[0];
 }
 
-/* talloc: allocate memory for a tree node */
-struct tnode *talloc(void) {
-    return (struct tnode *) malloc(sizeof(struct tnode));
+
+char buf[BUFSIZE];      /* buffer for ungetch */
+int bufp = 0;           /* next free position in buffer */
+
+/* getch: Get a (possibly pushed back) character */
+int getch(void)     
+{
+    return (bufp > 0) ? buf[--bufp] : getchar();
 }
 
-/* lalloc: allocate memory for a line node */
-struct lnode *lalloc(void) {
-    return (struct lnode *) malloc(sizeof(struct lnode));
-}
 
-/* strdup: duplicate a string */
-char *strdup(const char *s) {
-    char *p = (char *) malloc(strlen(s) + 1);
-    if (p != NULL)
-        strcpy(p, s);
-    return p;
+/* ungetch: push character back on input */
+void ungetch(int c)
+{
+    if (bufp >= BUFSIZE)
+        printf("ERROR in ungetch: too many characters!\n");
+    else
+        buf[bufp++] = c;
 }

@@ -1,12 +1,18 @@
-/* Solution to Exercise 4-13 of K&R */
+/*****************************************************************************
+ * The C Programming Language (2nd., ANSI C ed.) by Kernighan and Ritchie
+ * Exercise 4-13
+ * Author: pzuehlke
+ ****************************************************************************/
+
 #include <stdio.h>
-#include <string.h>
+#include <string.h>     // for `strlen`
 
 void recursive_reverse(char s[], int left, int right);
 void reverse(char s[]);
 void swap(char s[], int i, int j);
 
-int main() {
+int main()
+{
     char s[] = "Hello, World!";
     reverse(s);
     printf("%s\n", s); // Output: "!dlroW ,olleH"
@@ -21,7 +27,8 @@ void recursive_reverse(char s[], int left, int right)
     }
 }
 
-void reverse(char s[]) {
+void reverse(char s[])
+{
     recursive_reverse(s, 0, strlen(s) - 1);
 }
 
@@ -32,4 +39,3 @@ void swap(char s[], int i, int j)
     s[i] = s[j];
     s[j] = temp;
 }
-

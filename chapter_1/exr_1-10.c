@@ -1,5 +1,10 @@
-/* Solution to Exercise 1-10 of K&R */
-# include <stdio.h>
+/*****************************************************************************
+ * The C Programming Language (2nd., ANSI C ed.) by Kernighan and Ritchie
+ * Exercise 1.10
+ * Author: pzuehlke
+ ****************************************************************************/
+
+#include <stdio.h>
 
 int main(void)
 {
@@ -9,17 +14,14 @@ int main(void)
     while ((c = getchar()) != EOF) {
         if (c == '\n') {
             putchar('\\');
-            putchar('\n');
-        }
-        else if (c == '\t') {
+            putchar('n');
+        } else if (c == '\t') {
             putchar('\\');
-            putchar('\t');
-        }
-        else if (c == '\b') {
+            putchar('t');
+        } else if (c == '\b') {
             putchar('\\');
-            putchar('\b');
-        }
-        else
+            putchar('b');
+        } else
             putchar(c);
     }
 

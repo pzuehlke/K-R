@@ -1,4 +1,9 @@
-/* Solution to Exercise 3-5 of K&R */
+/*****************************************************************************
+ * The C Programming Language (2nd., ANSI C ed.) by Kernighan and Ritchie
+ * Exercise 3.5
+ * Author: pzuehlke
+ ****************************************************************************/
+
 #include <stdio.h>
 #include <string.h>
 
@@ -6,10 +11,12 @@ void itob(int n, char s[], int b);
 void reverse(char s[]);
 
 
+/* itob: convert an integer n to characters into its base b representation.
+ * Store the result in string s */
 void itob(int n, char s[], int b) {
     int i = 0;
     int sign = n;
-    char digits[] = "0123456789abcdefghijklmnopqrstuvwxyz";
+    char digits[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     if (b < 2 || b > 36)
         printf("ERROR: The base b must lie between 2 and 36.");
@@ -25,6 +32,7 @@ void itob(int n, char s[], int b) {
 }
 
 
+/* reverse: reverse the characters of string s. */
 void reverse(char s[]) {
     int c, i, j;
 

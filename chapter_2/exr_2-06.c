@@ -1,4 +1,9 @@
-/* Solution to Exercise 2-6 of K&R */
+/*****************************************************************************
+ * The C Programming Language (2nd., ANSI C ed.) by Kernighan and Ritchie
+ * Exercise 2.6
+ * Author: pzuehlke
+ ****************************************************************************/
+
 #include <stdio.h>
 
 unsigned char setbits(unsigned char x, int p, int n, unsigned char y);
@@ -52,7 +57,7 @@ int main(void)
 /* print_binary: print binary representation of an unsigned char number */
 void print_binary(unsigned char x) {
     int i;
-    for (i = 8 * sizeof(unsigned char) - 1; i >= 0; i--) {
+    for (i = 8 * sizeof(unsigned char) - 1; i >= 0; --i) {
         putchar((x & (1u << i)) ? '1' : '0');
     }
 }
@@ -69,5 +74,3 @@ unsigned char setbits(unsigned char x, int p, int n, unsigned char y)
     x_left = (x >> (p + 1)) << n;            // n zeros from position p on
     return ((x_left | y_rightmost_n) << (p + 1 - n)) | x_right;
 }
-
-

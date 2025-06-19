@@ -1,4 +1,9 @@
-/* Solution to exercise 1-22 of K&R */
+/*****************************************************************************
+ * The C Programming Language (2nd., ANSI C ed.) by Kernighan and Ritchie
+ * Exercise 1.22
+ * Author: pzuehlke
+ ****************************************************************************/
+
 # include <stdio.h>
 
 # define LINE_LEN 40
@@ -16,7 +21,7 @@ int main(void)
 
 int fold(void)
 {
-    char buf[];
+    char buf[LINE_LEN];
     char c;
     int position = 0;
     int blank_count = 0;
@@ -54,4 +59,3 @@ int fold(void)
     }
 
 }
-

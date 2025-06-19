@@ -1,4 +1,9 @@
-/* Solution to Exercise 1-12 of K&R */
+/*****************************************************************************
+ * The C Programming Language (2nd., ANSI C ed.) by Kernighan and Ritchie
+ * Exercise 1.12
+ * Author: pzuehlke
+ ****************************************************************************/
+
 #include <stdio.h>
 
 #define IN 1    // Inside a word
@@ -17,11 +22,11 @@ int main(void)
                 putchar('\n');
                 state = OUT;
             }
-        }
-        else {
+        } else {
             putchar(c);
             state = IN;
-            }
+        }
     }
+
     return 0;
 }

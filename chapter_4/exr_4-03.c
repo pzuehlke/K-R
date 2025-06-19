@@ -1,20 +1,25 @@
-/* Solution to Exercise 4-3 of K&R */
+/*****************************************************************************
+ * The C Programming Language (2nd., ANSI C ed.) by Kernighan and Ritchie
+ * Exercise 4.3
+ * Author: pzuehlke
+ ****************************************************************************/
+
 #include <stdio.h>
-#include <stdlib.h>     /* for atof() and fmod() */
+#include <stdlib.h>     /* for atof() */
 #include <ctype.h>      /* for isdigit() */
-#include <math.h>       /* for fmod */
+#include <math.h>       /* for fmod() */
 
 #define MAXOP 100       // max size of operand or operator
 #define MAXVAL 100      // maximum depth of val stack
 #define NUMBER '0'      // signal that a number was found
 #define BUFSIZE 100     // size of buffer
-#define NUMBER '0'      // signal that a number was found
 
 int getch(void);
 void ungetch(int);
 int getop(char []);
 void push(double);
 double pop(void);
+
 
 /* Calculator using reverse Polish notation */
 int main(void)
@@ -63,29 +68,34 @@ int main(void)
     return 0;
 }
 
+
 int sp = 0;             // next free stack position
 double stack[MAXVAL];   // value stack
 
-/* push: push f onto value stack */
-void push(double f)
+/* push: push x onto value stack */
+void push(double x)
 {
-    if (sp < MAXVAL)
-        stack[sp++] = f;
-    else
-        printf("ERROR: Stack full, can't push %g\n", f);
+    if (sp < MAXVAL) {
+        stack[sp++] = x;
+    } else {
+        printf("ERROR: Stack full, can't push %g\n", x);
+    }
 }
+
 
 /* pop: pop and return top value from stack */
 double pop(void)
 {
-    if (sp > 0)
+    if (sp > 0) {
         return stack[--sp];
-    else {
+    } else {
         printf("ERROR: Stack empty!\n");
         return 0.0;
     }   
 }
 
+
+/* getop: get next operator or numeric operand */
 int getop(char s[])
 {
     int i, c;
@@ -93,28 +103,32 @@ int getop(char s[])
     while ((s[0] = c = getch()) == ' ' || c == '\t')
         ;
     s[1] = '\0';
-    if (!isdigit(c) && c != '.' && c!= '-')
+    if (!isdigit(c) && c != '.' && c != '-') {
         return c;       /* not a number */
+    }
     i = 0;
     if (c == '-') {
-        if (isdigit(c = getch()))
+        if (isdigit(c = getch())) {  // negative number
             s[++i] = c;
-        else {
+        } else {    // not a negative number
             ungetch(c);
             return '-';
         }
     }
-    if (isdigit(c))     /* collect integer part */
+    if (isdigit(c)) {   /* collect integer part */
         while (isdigit(s[++i] = c = getch()))
             ;
-    if (c == '.')       /* collect fraction part */
+    }
+    if (c == '.') {     /* collect fractional part */
         while (isdigit(s[++i] = c = getch()))
             ;
+    }
     s[i] = '\0';
     if (c != EOF)
         ungetch(c);
     return NUMBER;
 }
+
 
 char buf[BUFSIZE];      /* buffer for ungetch */
 int bufp = 0;           /* next free position in buffer */

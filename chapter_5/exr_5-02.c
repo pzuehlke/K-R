@@ -1,4 +1,9 @@
-/* Solution to Exercise 5-2 of K&R */
+/*****************************************************************************
+ * The C Programming Language (2nd., ANSI C ed.) by Kernighan and Ritchie
+ * Exercise 5-02
+ * Author: pzuehlke
+ ****************************************************************************/
+
 #include <stdio.h>
 #include <ctype.h>
 
@@ -10,8 +15,10 @@ int getfloat(float *px);
 
 int main(void) {
     float number;
-    while (getfloat(&number) != EOF) {
-        printf("Read float: %f\n", number);
+    int result;
+    
+    while ((result = getfloat(&number)) && result != EOF) {
+            printf("Read float: %f\n", number);
     }
     return 0;
 }
@@ -21,7 +28,7 @@ int main(void) {
 int getfloat(float *px)
 {
 
-    int c, sign, power = 1;
+    int c;
 
     while (isspace(c = getch()))    /* skip white space */
         ;
@@ -29,17 +36,27 @@ int getfloat(float *px)
         ungetch(c);     /* it's not a number */
         return 0;
     }
-    sign = (c == '-') ? -1 : 1;
-    if (c == '+' || c == '-')
+    int sign = (c == '-') ? -1 : 1;
+    if (c == '+' || c == '-') {
         c = getch();
+        // Check if sign is followed by digit or decimal point:
+        if (!isdigit(c) && c != '.') {
+            ungetch(c);
+            return 0;  // Just a sign, not a number
+        }
+    }
+
     for (*px = 0; isdigit(c); c = getch())
         *px = 10 * *px + (c - '0');
+
+    float power = 1.0;
     if (c == '.') {
         while (isdigit(c = getch())) {
             *px = 10 * *px + (c - '0');
-            power *= 10.0;
+            power *= 10;
         }
     }
+
     *px = sign * *px / power;
     if (c != EOF)
         ungetch(c);
@@ -63,4 +80,3 @@ void ungetch(int c)
     else
         buf[bufp++] = c;
 }
-

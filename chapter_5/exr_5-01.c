@@ -1,4 +1,9 @@
-/* Solution to Exercise 5-1 of K&R */
+/*****************************************************************************
+ * The C Programming Language (2nd., ANSI C ed.) by Kernighan and Ritchie
+ * Exercise 5-01
+ * Author: pzuehlke
+ ****************************************************************************/
+
 #include <stdio.h>
 #include <ctype.h>
 

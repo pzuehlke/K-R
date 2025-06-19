@@ -1,4 +1,9 @@
-/* Solution to Exercise 1-7 of K&R */
+/*****************************************************************************
+ * The C Programming Language (2nd., ANSI C ed.) by Kernighan and Ritchie
+ * Exercise 1.7
+ * Author: pzuehlke
+ ****************************************************************************/
+
 #include <stdio.h>
 
 int main(void)

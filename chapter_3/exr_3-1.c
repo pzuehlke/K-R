@@ -1,4 +1,8 @@
-/* Solution to Exercise 3-1 of K&R */
+/*****************************************************************************
+ * The C Programming Language (2nd., ANSI C ed.) by Kernighan and Ritchie
+ * Exercise 3.1
+ * Author: pzuehlke
+ ****************************************************************************/
 
 /* binsearch: find x in list[0] <= list[1] <= ... <= list[n - 1] */
 int binsearch(int x, int list[], int n)

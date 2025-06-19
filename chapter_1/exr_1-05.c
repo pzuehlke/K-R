@@ -1,4 +1,9 @@
-/* Solution to Exercise 1-5 of K&R */
+/*****************************************************************************
+ * The C Programming Language (2nd., ANSI C ed.) by Kernighan and Ritchie
+ * Exercise 1.5
+ * Author: pzuehlke
+ ****************************************************************************/
+
 #include <stdio.h>
 
 int main(void)
@@ -11,8 +16,7 @@ int main(void)
 
     fahr = UPPER;
 
-    for (fahr = UPPER; fahr >= LOWER; fahr -= STEP)
-    {
+    for (fahr = UPPER; fahr >= LOWER; fahr -= STEP) {
         celsius = (5.0 / 9.0) * (fahr - 32);
         printf("%3d %6.1f\n", fahr, celsius);
     }

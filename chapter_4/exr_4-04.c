@@ -1,13 +1,18 @@
-/* Solution to Exercise 4-4 of K&R */
-#include <stdio.h>
-#include <stdlib.h>     // for atof()
-#include <ctype.h>
-#include <math.h>
+/*****************************************************************************
+ * The C Programming Language (2nd., ANSI C ed.) by Kernighan and Ritchie
+ * Exercise 4.4
+ * Author: pzuehlke
+ ****************************************************************************/
 
-#define MAXVAL 100      // maximum depth of val stack
+#include <stdio.h>
+#include <stdlib.h>     /* for atof() */
+#include <ctype.h>      /* for isdigit() */
+#include <math.h>       /* for fmod() */
+
 #define MAXOP 100       // max size of operand or operator
-#define BUFSIZE 100     // size of buffer
+#define MAXVAL 100      // maximum depth of val stack
 #define NUMBER '0'      // signal that a number was found
+#define BUFSIZE 100     // size of buffer
 
 int getop(char []);
 double peek(void);
@@ -78,7 +83,32 @@ int main(void)
     return 0;
 }
 
+int sp = 0;             // next free stack position
+double stack[MAXVAL];   // value stack
 
+/* push: push x onto value stack */
+void push(double x)
+{
+    if (sp < MAXVAL) {
+        stack[sp++] = x;
+    } else {
+        printf("ERROR: Stack full, can't push %g\n", x);
+    }
+}
+
+/* pop: pop and return top value from stack */
+double pop(void)
+{
+    if (sp > 0) {
+        return stack[--sp];
+    } else {
+        printf("ERROR: Stack empty!\n");
+        return 0.0;
+    }   
+}
+
+
+/* getop: get next operator or numeric operand */
 int getop(char s[])
 {
     int i, c;
@@ -86,23 +116,26 @@ int getop(char s[])
     while ((s[0] = c = getch()) == ' ' || c == '\t')
         ;
     s[1] = '\0';
-    if (!isdigit(c) && c != '.' && c!= '-')
+    if (!isdigit(c) && c != '.' && c != '-') {
         return c;       /* not a number */
+    }
     i = 0;
     if (c == '-') {
-        if (isdigit(c = getch()))
+        if (isdigit(c = getch())) {  // negative number
             s[++i] = c;
-        else {
+        } else {    // not a negative number
             ungetch(c);
             return '-';
         }
     }
-    if (isdigit(c))     /* collect integer part */
+    if (isdigit(c)) {   /* collect integer part */
         while (isdigit(s[++i] = c = getch()))
             ;
-    if (c == '.')       /* collect fraction part */
+    }
+    if (c == '.') {     /* collect fractional part */
         while (isdigit(s[++i] = c = getch()))
             ;
+    }
     s[i] = '\0';
     if (c != EOF)
         ungetch(c);
@@ -110,36 +143,12 @@ int getop(char s[])
 }
 
 
-int sp = 0;             // next free stack position
-double stack[MAXVAL];   // value stack
-
-/* push: Push f onto value stack */
-void push(double f)
-{
-    if (sp < MAXVAL)
-        stack[sp++] = f;
-    else
-        printf("ERROR: Stack full, can't push %g\n", f);
-}
-
-/* pop: Pop and return top value from stack */
-double pop(void)
-{
-    if (sp > 0)
-        return stack[--sp];
-    else {
-        printf("ERROR: Stack empty!\n");
-        return 0.0;
-    }   
-}
-
-
 /* peek: Return top element of stack without popping it */
 double peek(void)
 {
-    if (sp > 0)
+    if (sp > 0) {
         return stack[sp - 1];
-    else {
+    } else {
         printf("ERROR: Can't peek, stack empty!\n");
         return 0.0;
     }
@@ -148,11 +157,11 @@ double peek(void)
 /* duplicate: Duplicate the top element of the stack */
 void duplicate(void)
 {
-    if (sp > 0)
+    if (sp > 0) {
         push(peek());
-    else
+    } else {
         printf("ERROR: Stack empty, no element to duplicate!");
-    return;
+    }
 }
 
 /* swap: Swap the top two elements of the stack */

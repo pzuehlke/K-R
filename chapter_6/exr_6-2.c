@@ -1,120 +1,233 @@
-/* Solution to Exercise 6-2 of K&R */
+/*****************************************************************************
+ * The C Programming Language (2nd., ANSI C ed.) by Kernighan and Ritchie
+ * Exercise 6-02
+ * Author: pzuehlke
+ ****************************************************************************/
+
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <ctype.h>
+#include <string.h>
+#include <stdlib.h>
 
-#define MAXWORD 100    // Maximum length of a word
-#define MAXVARS 1000   // Maximum number of variable names
-#define PREFIXLEN 6    // Number of characters to compare
+#define MAXWORD 100
+#define BUFSIZE 100
+#define SIMILAR_CHARS 6  // Compare first 6 characters for similarity
 
-struct var {           // Structure to hold variable names (a linked list):
-    char *name;
-    struct var *next;
+struct varlist{
+    char* varname;
+    struct varlist* next;
 };
 
+struct tnode {
+    char* word;             // representative word for this group
+    struct varlist* vars;   // list of similar variables
+    int count;              // number of variables in this group
+    struct tnode* left;     // left child
+    struct tnode* right;    // right child
+};
+
+struct varlist* append(struct varlist* list, char* new_variable);
+int check_similarity(struct varlist* vars, char* w);
+struct tnode* addtree(struct tnode *, char *);
+void treeprint(struct tnode *);
+struct tnode* talloc(void);
 int getword(char *, int);
-struct var *addvar(struct var *, char *);
-void sortvars(struct var *);
-void printgroups(struct var *);
+int getch(void);
+void ungetch(int);
 
 
-int main() {
+/* print variable names grouped by similarity */
+int main(void)
+{
+    struct tnode *root = NULL;
     char word[MAXWORD];
-    struct var *variables = NULL;
 
-    // Read variable names from input until EOF:
     while (getword(word, MAXWORD) != EOF) {
-        variables = addvar(variables, word);
+        if (word[0] == '\0') {  // empty word indicates EOF
+            break;
+        }
+        if (isalpha(word[0]) || word[0] == '_') {  // valid variable name start
+            root = addtree(root, word);
+        }
     }
-
-    // Sort variable names and print them in groups:
-    sortvars(variables);
-    printgroups(variables);
-
+    treeprint(root);
     return 0;
 }
 
-/* getword: read next word from input */
-int getword(char *word, int lim) {
+
+/* append: add new variable to varlist */
+struct varlist* append(struct varlist* list, char* new_variable) {
+    struct varlist* new_element = malloc(sizeof(struct varlist));
+    new_element->varname = strdup(new_variable);
+    new_element->next = NULL;
+    
+    if (list == NULL) {
+        return new_element;
+    }
+    
+    struct varlist* current = list;
+    while (current->next) { 
+        current = current->next; 
+    }
+    current->next = new_element;
+    return list;  // return head of list
+}
+
+
+/* check_similarity: check if w is similar to any variable in the group */
+int check_similarity(struct varlist* vars, char* w) {
+    struct varlist* current = vars;
+    
+    // First check for exact matches in the entire list:
+    while (current != NULL) {
+        if (strcmp(w, current->varname) == 0) {
+            return 2;  // exact match, don't add duplicate
+        }
+        current = current->next;
+    }
+    
+    // If no exact match, check similarity against just the first element
+    // (since all elements in the list are similar to each other):
+    if (strncmp(w, vars->varname, SIMILAR_CHARS) == 0) {
+        return 1;  // similar, should be added to group
+    }
+    
+    return 0;  // not similar to any in this group
+}
+
+
+/* addtree: add a node with w, at or below p */
+struct tnode *addtree(struct tnode *p, char *w)
+{
+    int cond, similarity;
+
+    if (p == NULL) {        // create new group
+        p = talloc();
+        p->word = strdup(w);
+        p->vars = append(NULL, w);
+        p->count = 1;
+        p->left = p->right = NULL;
+    } else if ((similarity = check_similarity(p->vars, w)) > 0) {
+        if (similarity == 1) {  // similar but not exact, add to group
+            p->vars = append(p->vars, w);
+            p->count++;
+        }
+        // if similarity == 2 (exact match), don't add duplicate
+    } else if ((cond = strcmp(w, p->word)) < 0) {
+        p->left = addtree(p->left, w);
+    } else {
+        p->right = addtree(p->right, w);
+    }
+    return p;
+}
+
+
+/* treeprint: in-order print of tree p */
+void treeprint(struct tnode *p)
+{
+    if (p != NULL) {
+        treeprint(p->left);
+        if (p->count > 1) {  // only print groups with multiple variables
+            printf("* Group (first %d chars: \"", SIMILAR_CHARS);
+            for (int i = 0; i < SIMILAR_CHARS && p->word[i] != '\0'; i++) {
+                printf("%c", p->word[i]);
+            }
+            printf("\"): %d variables\n", p->count);
+            
+            struct varlist* current = p->vars;
+            while (current != NULL) {
+                printf("    -%s\n", current->varname);
+                current = current->next;
+            }
+            printf("\n");
+        }
+        treeprint(p->right);
+    }
+}
+
+
+/* talloc: make a tnode */
+struct tnode *talloc(void)
+{
+    return (struct tnode *) malloc(sizeof(struct tnode));
+}
+
+
+/* getword: get next word or character from input */
+int getword(char *word, int lim)
+{
     int c;
     char *w = word;
 
-    // Skip whitespace characters:
-    while (isspace(c = getchar()))
+    while (isspace(c = getch()))    // skip whitespace
         ;
-    if (c != EOF)
-        *w++ = c;
-    if (!isalpha(c)) {
-        *w = '\0';
-        return c;
-    }
-    for (; --lim > 0; w++) {
-        if (!isalnum(*w = getchar())) {
-            ungetc(*w, stdin);
-            break;
+
+    // Skip inline or multi-line comments:
+    if (c == '/') {    // skip comments, assuming they are well-formed
+        c = getch();        // get next character
+        if (c == '/') {     // inline comment
+            while ((c = getch()) != '\n' && c != EOF)
+                ;
+        } else if (c == '*') {        // multiline comment
+            int prev = getch();
+            while ((c = getch()) != EOF) {
+                if (prev == '*' && c == '/') 
+                    break;
+                prev = c;
+            }
         }
+        return getword(word, lim);
+    }
+
+    if (c != EOF)   // if not EOF, store the initial character in w
+        *w++ = c;
+
+    // Case 1: a proper word (incl. '_'), possibly a preprocessor directive (#):
+    if (isalpha(c) || c == '_' || c == '#') {
+        for ( ; --lim > 0; w++) {
+            if (!isalnum(*w = getch()) && *w != '_') {
+                ungetch(*w);
+                break;
+            }
+        }
+    }
+    
+    // Case 2: a string literal:
+    else if (c == '\"') {   // treat a string as a single word, incl. quotes
+        // We will use c to store previous the character
+        for ( ; --lim > 0 && ((*w = getch()) != '\"' || (c == '\\')); w++) {
+            if (*w == '\\')     // beware the sequence \" inside the string
+                c = '\\';       // use c to store previous character
+            else
+                c = *w;
+        }
+        w++;
+    }
+    
+    // Case 3: a single character:
+    else if (c == '\'') {   // treat a char as a single word, incl. quotes
+        c = *w++ = getch();     // get the char
+        if (c == '\\') { *w++ = getch(); }  // it's an escape character
+        *w++ = getch();     // get the right single quote
     }
     *w = '\0';
     return word[0];
 }
 
-/* addvar: add a new variable to the linked list */
-struct var *addvar(struct var *p, char *name) {
-    struct var *newvar = (struct var *)malloc(sizeof(struct var));
-    newvar->name = strdup(name);
-    newvar->next = p;
-    return newvar;
+char buf[BUFSIZE];      /* buffer for ungetch */
+int bufp = 0;           /* next free position in buffer */
+
+/* getch: Get a (possibly pushed back) character */
+int getch(void)     
+{
+    return (bufp > 0) ? buf[--bufp] : getchar();
 }
 
-/* compare: comparison function for quicksort, comparing first 6 characters */
-int compare(const void *a, const void *b) {
-    struct var *var1 = *(struct var **)a;
-    struct var *var2 = *(struct var **)b;
-    return strncmp(var1->name, var2->name, PREFIXLEN);
-}
-
-/* sortvars: sort the linked list of variable names using quicksort */
-void sortvars(struct var *p) {
-    int n = 0;
-    struct var *arr[MAXVARS];
-
-    // Convert linked list to array:
-    while (p) {
-        arr[n++] = p;
-        p = p->next;
-    }
-
-    // Sort array using quicksort:
-    qsort(arr, n, sizeof(struct var *), compare);
-
-    // Convert array back to linked list:
-    for (int i = 0; i < n - 1; i++) {
-        arr[i]->next = arr[i + 1];
-    }
-    arr[n - 1]->next = NULL;
-}
-
-/* printgroups: print variable names in groups with identical first 6 chars */
-void printgroups(struct var *p) {
-    struct var *start = p;
-
-    // Iterate through sorted list and print groups:
-    while (p) {
-        // If next variable has a different prefix or end of list is reached:
-        if (!p->next || strncmp(p->name, p->next->name, PREFIXLEN) != 0) {
-            struct var *q = start;
-
-            // Print all variables in the current group:
-            while (q != p->next) {
-                printf("%s ", q->name);
-                q = q->next;
-            }
-            printf("\n");
-
-            // Move to the next group:
-            start = p->next;
-        }
-        p = p->next;
-    }
+/* ungetch: push character back on input */
+void ungetch(int c)
+{
+    if (bufp >= BUFSIZE)
+        printf("ERROR in ungetch: too many characters!\n");
+    else
+        buf[bufp++] = c;
 }

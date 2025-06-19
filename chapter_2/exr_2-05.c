@@ -1,4 +1,9 @@
-/* Solution to Exercise 2-5 of K&R */
+/*****************************************************************************
+ * The C Programming Language (2nd., ANSI C ed.) by Kernighan and Ritchie
+ * Exercise 2.5
+ * Author: pzuehlke
+ ****************************************************************************/
+
 #include <stdio.h>
 
 int locate_char(char s[], char c);
@@ -11,19 +16,20 @@ int main(void)
     char s[] = "abcde";
 
     printf("%i\n", locate_char(t, 'a'));    // should return 6
+    printf("%i\n", locate_char(t, 'x'));    // should return -1
     printf("%i\n", any(t, s));              // should return 2
 
     return 0;
 }
 
 
-/* locate_char: find the index of the first occurrence of c in s */
-int locate_char(char s[], char c)
+/* locate_char: find the index of the first occurrence of c in t */
+int locate_char(char t[], char c)
 {
     int i;
 
-    for (i = 0; s[i] != '\0'; i++)
-        if (s[i] == c)
+    for (i = 0; t[i] != '\0'; ++i)
+        if (t[i] == c)
             return i;
     return -1;
 }
@@ -35,7 +41,7 @@ int any(char t[], char s[])
     int i, first, current;
 
     first = -1;
-    for (i = 0; s[i] != '\0'; i++) {
+    for (i = 0; s[i] != '\0'; ++i) {
         current = locate_char(t, s[i]);
         if ((-1 < current) && (-1 == first || current < first))
             first = current;

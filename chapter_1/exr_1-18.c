@@ -1,9 +1,14 @@
-/* Solution to exercise 1-18 of K&R */
-# include <stdio.h>
-# define MAXLINE 1000   /* maximum input line size */
+/*****************************************************************************
+ * The C Programming Language (2nd., ANSI C ed.) by Kernighan and Ritchie
+ * Exercise 1.18
+ * Author: pzuehlke
+ ****************************************************************************/
 
-int get_line(char line[], int maxline);
-void slice_str(char slice[], char original[], int min, int max);
+# include <stdio.h>
+
+# define MAXLINE 1000   // maximum input line size
+
+int get_line_until_last_nonblank(char line[], int maxline);
 
 /* Removes trailing blanks and tabs from each line of input. */
 int main(void)
@@ -12,15 +17,15 @@ int main(void)
     char slice[MAXLINE];
     int len;
 
-    while ((len = get_line(line, MAXLINE)) > 0) {
-        slice_str(slice, line, 0, len);
-        printf("%s\n", slice);
+    while ((len = get_line_until_last_nonblank(line, MAXLINE)) > 0) {
+        printf("%s", line);
     }
     return 0;
 }
 
-/* get_line: read a line into s, return length. */
-int get_line(char s[], int lim)
+/* get_line: read a line into s, removing all trailing blanks and tabs; return
+ * length (including the newline at the end). */
+int get_line_until_last_nonblank(char s[], int lim)
 {
     int c, i, m;
 
@@ -30,20 +35,11 @@ int get_line(char s[], int lim)
         if ((c != '\n') && (c != '\t') && (c != ' '))
             m = i;
     }
+    i = m + 1;
     if (c == '\n') {
         s[i] = c;
         ++i;
     }
     s[i] = '\0';
-    return m + 1;
-}
-
-/* slice_str: takes a slice of 'original'; starts at min, ends at max - 1 */
-void slice_str(char slice[], char original[], int min, int max)
-{
-    int i;
-    
-    for (i = min; i < max; ++i)
-        slice[i - min] = original[i];
-    slice[i] = '\0';
+    return i;
 }

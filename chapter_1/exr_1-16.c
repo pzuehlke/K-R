@@ -1,6 +1,12 @@
-/* Solution to Exercise 1-16 of K&R */
+/*****************************************************************************
+ * The C Programming Language (2nd., ANSI C ed.) by Kernighan and Ritchie
+ * Exercise 1.16
+ * Author: pzuehlke
+ ****************************************************************************/
+
 # include <stdio.h>
-# define MAXLINE 10   /* maximum input line size */
+
+# define MAXLINE 10   // maximum input line size
 
 void copy(char to[], char from[]);
 int get_line(char line[], int maxline);
@@ -9,9 +15,9 @@ int min(int i, int j);
 /* Print longest input line. */
 int main(void)
 {
-    int len;    /* current line length */
-    int max;    /* maximum length seen so far */
-    char line[MAXLINE];  /* current input line */
+    int len;    // current line length
+    int max;    // maximum length seen so far
+    char line[MAXLINE];  // current input line
     char longest[MAXLINE];
 
     max = 0;
@@ -20,7 +26,7 @@ int main(void)
             max = len;
             copy(longest, line);
         }
-    if (max > 0) {    /* there was a line */
+    if (max > 0) {    // there was a line
         printf("The longest line, up to the %d-th character", MAXLINE - 1);
         printf(" is: \n%s", longest);
         printf("\nIts complete length is %d.\n", max);

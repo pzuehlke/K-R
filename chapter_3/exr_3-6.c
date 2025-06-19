@@ -1,4 +1,9 @@
-/* Solution to Exercise 3-6 of K&R */
+/*****************************************************************************
+ * The C Programming Language (2nd., ANSI C ed.) by Kernighan and Ritchie
+ * Exercise 3.6
+ * Author: pzuehlke
+ ****************************************************************************/
+
 #include <stdio.h>
 #include <string.h>
 

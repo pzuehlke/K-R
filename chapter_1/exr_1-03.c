@@ -1,4 +1,9 @@
-/* Solution to Exercise 1-3 of K&R */
+/*****************************************************************************
+ * The C Programming Language (2nd., ANSI C ed.) by Kernighan and Ritchie
+ * Exercise 1.3
+ * Author: pzuehlke
+ ****************************************************************************/
+
 #include <stdio.h>
 
 int main(void) {
@@ -19,7 +24,3 @@ int main(void) {
     }
     return 0;
 }
-
-
-
-

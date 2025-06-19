@@ -1,4 +1,9 @@
-/* Solution to Exercise 7-1 of K&R */
+/*****************************************************************************
+ * The C Programming Language (2nd., ANSI C ed.) by Kernighan and Ritchie
+ * Exercise 7-01
+ * Author: pzuehlke
+ ****************************************************************************/
+
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
@@ -13,7 +18,7 @@ int main(int argc, char *argv[])
         convert = toupper;
     }
 
-    while (c = getchar() != EOF) {
+    while ((c = getchar()) != EOF) {
         putchar(convert(c));
     }
 

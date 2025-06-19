@@ -1,12 +1,23 @@
-/* Solution to Exercise 1-13 of K&R */
+/*****************************************************************************
+ * The C Programming Language (2nd., ANSI C ed.) by Kernighan and Ritchie
+ * Exercise 1.13
+ * Author: pzuehlke
+ ****************************************************************************/
+
 #include <stdio.h>
 
 #define IN 1            // Inside a word
 #define OUT 0           // Outside a word
-#define MAXLENGTH 30    // Maximum length of a word
+#define MAXLENGTH 50    // Maximum length of a word
 
 /* Extracts the maximum of two integers. */
-int max(int a, int b);
+int max(int a, int b)
+    {
+        if (a > b)
+            return a;
+        else
+            return b;
+    }   
 
 /* Prints a histogram of the lengths of words in the input. */
 int main(void) {
@@ -25,12 +36,12 @@ int main(void) {
                 length = 0;
                 state = OUT;
             }   
-        }
-        else {
+        } else {
             ++length;
             state = IN;
         }   
     }
+
     printf("LENGTH \t # OF WORDS");
     for (i = 0; i <= max_length; ++i) {
         if (counts[i] != 0) {
@@ -42,12 +53,3 @@ int main(void) {
     printf("\n");
     return 0;
 }
-
-int max(int a, int b)
-    {
-        if (a > b)
-            return a;
-        else
-            return b;
-    }   
-

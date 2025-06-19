@@ -1,4 +1,9 @@
-/* Solution to Exercise 2-1 of K&R */
+/*****************************************************************************
+ * The C Programming Language (2nd., ANSI C ed.) by Kernighan and Ritchie
+ * Exercise 2.1
+ * Author: pzuehlke
+ ****************************************************************************/
+
 #include <stdio.h>
 #include <limits.h>
 #include <float.h>

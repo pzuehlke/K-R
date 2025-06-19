@@ -1,19 +1,16 @@
-/* Solution to exercise 1-20 of K&R */
+/*****************************************************************************
+ * The C Programming Language (2nd., ANSI C ed.) by Kernighan and Ritchie
+ * Exercise 1.20
+ * Author: pzuehlke
+ ****************************************************************************/
+
 # include <stdio.h>
 
 # define TABSTOP 8
 
-int detab(void);
-
-
+/* detab: replace tabs in the input with the proper number of blanks to space
+   until the next tab stop. */
 int main(void)
-{
-    detab();
-    return 0;
-}
-
-
-int detab(void)
 {
     int i = 0, position = 0, next;
     char c;
@@ -21,19 +18,16 @@ int detab(void)
     while ((c = getchar()) != EOF) {
         if (c == '\t') {
             next = TABSTOP - (position % TABSTOP);
-            for (i = 0; i < next; i++) {
+            for (i = 0; i < next; ++i) {
                 putchar(' ');
-                position++;
+                ++position;
             }
-        }
-        else if (c == '\n')
-        {
+        } else if (c == '\n') {
             putchar('\n');
             position = 0;
-        }
-        else {
+        } else {
             putchar(c);
-            position++;
+            ++position;
         }
     }
 

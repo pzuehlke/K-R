@@ -3,7 +3,7 @@
 #include <ctype.h>
 
 /* main: implements `lower`, which converts input to lowercase */
-int main(void)
+int main()
 {
     int c;
 

@@ -1,7 +1,12 @@
-/* Solution to Exercise 1-4 of K&R */
-# include <stdio.h>
+/*****************************************************************************
+ * The C Programming Language (2nd., ANSI C ed.) by Kernighan and Ritchie
+ * Exercise 1.4
+ * Author: pzuehlke
+ ****************************************************************************/
 
-/* print Celsius-Fahrenheit table for celsius = -40, -30, ..., 160 */
+#include <stdio.h>
+
+/* print Celsius -> Fahrenheit table for celsius = -40, -30, ..., 160 */
 
 int main(void) {
     const int LOWER = -40;

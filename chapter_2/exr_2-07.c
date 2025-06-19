@@ -1,4 +1,9 @@
-/* Solution to Exercise 2-7 of K&R */
+/*****************************************************************************
+ * The C Programming Language (2nd., ANSI C ed.) by Kernighan and Ritchie
+ * Exercise 2.7
+ * Author: pzuehlke
+ ****************************************************************************/
+
 #include <stdio.h>
 
 unsigned char invert(unsigned char x, int p, int n);
@@ -44,7 +49,7 @@ int main(void)
 /* print_binary: print binary representation of an unsigned char number */
 void print_binary(unsigned char x) {
     int i;
-    for (i = 8 * sizeof(x) - 1; i >= 0; i--) {
+    for (i = 8 * sizeof(x) - 1; i >= 0; --i) {
         putchar((x & (1u << i)) ? '1' : '0');
     }
 }

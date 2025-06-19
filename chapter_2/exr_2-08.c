@@ -1,4 +1,9 @@
-/* Solution to Exercise 2-8 of K&R */
+/*****************************************************************************
+ * The C Programming Language (2nd., ANSI C ed.) by Kernighan and Ritchie
+ * Exercise 2.8
+ * Author: pzuehlke
+ ****************************************************************************/
+
 #include <stdio.h>
 
 unsigned char rightrot(unsigned char x, int n);
@@ -11,7 +16,7 @@ int main(void)
     unsigned char x, result;
 
     // Test 1
-    x = 0b10101010; // Binary: 1010 1010
+    x = 0b10001010; // Binary: 1000 1010
     result = rightrot(x, 4);
     printf("Test 1: rightrot(");
     print_binary(x);
@@ -66,12 +71,12 @@ int number_of_digits(int x)
 unsigned char rightrot(unsigned char x, int n)
 {
     unsigned char rightmost;
-    int p = number_of_digits(x);
+    int d = number_of_digits(x);
 
-    n = n % p;
+    n %= d;
     rightmost = x & ~(~0 << n);
     x = x >> n;
-    return (rightmost << (p - n)) | x;
+    return (rightmost << (d - n)) | x;
 }
 
 

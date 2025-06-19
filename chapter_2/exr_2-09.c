@@ -1,4 +1,9 @@
-/* Solution to Exercise 2-9 of K&R */
+/*****************************************************************************
+ * The C Programming Language (2nd., ANSI C ed.) by Kernighan and Ritchie
+ * Exercise 2.9
+ * Author: pzuehlke
+ ****************************************************************************/
+
 #include <stdio.h>
 
 
@@ -42,4 +47,4 @@ int bitcount(unsigned x)
  *
  * Consequently x & (x - 1) equals (ad)_2 where d = 000...0 (m bits). It
  * follows that everytime this operation is performed, we delete the rightmost
- * 1 bit of the current value of x, leaving the remaining bits unchanged.
+ * 1 bit of the current value of x, leaving the remaining bits unchanged. */
