@@ -57,7 +57,7 @@ int getfloat(float *px)
         }
     }
 
-    *px = sign * *px / power;
+    *px *= sign / power;
     if (c != EOF)
         ungetch(c);
     return c;

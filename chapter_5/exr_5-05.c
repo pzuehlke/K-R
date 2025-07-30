@@ -13,10 +13,10 @@ char* my_strncpy(char* s, char* t, size_t n)
 {
     char* start = s;
     while (n > 0 && (*s++ = *t++)) { --n; }
+    // According to the description, we must pad with n - len(t) copies of '\0'
     for (; n > 0; --n) { *s++ = '\0'; }
     return start;
 }
-
 
 /* my_strncat: concatenate at most n chars of t to s, terminate with '\0' */
 char* my_strncat(char* s, char* t, size_t n)

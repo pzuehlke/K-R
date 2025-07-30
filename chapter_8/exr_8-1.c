@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
 }
 
 
-/* filecopy: copy file infile to file outfile */
+/* filecopy: copy infile to outfile using `read` and `write` */
 int filecopy(int infile_d, int outfile_d)
 {
     int n;
