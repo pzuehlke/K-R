@@ -8,6 +8,8 @@
 #include <ctype.h>
 #include <string.h>
 
+/* lower: convert input to lower case;
+ * upper: convert input to upper case. */
 int main(int argc, char *argv[])
 {
     int c;

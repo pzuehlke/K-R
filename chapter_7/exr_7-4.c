@@ -7,30 +7,30 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-void minscanf(char* fmt, ...);
+void minscanf(char* format, ...);
 
-void minscanf(char* fmt, ...) {
-    va_list ap;
+void minscanf(char* format, ...) {
+    va_list arg_ptr;
     char* p;
 
-    va_start(ap, fmt);
-    for (p = fmt; *p; p++) {
+    va_start(arg_ptr, format);
+    for (p = format; *p; p++) {
         if (*p != '%') {
             continue;
         }
         switch (*++p) {
             case 'd': {
-                int* ival = va_arg(ap, int *);  // va_arg returns an address
+                int* ival = va_arg(arg_ptr, int*);  // returns an address
                 scanf("%d", ival);
                 break;
             }
             case 'f': {
-                float* fval = va_arg(ap, float *);
+                float* fval = va_arg(arg_ptr, float*);
                 scanf("%f", fval);
                 break;
             }
             case 's': {
-                char* sval = va_arg(ap, char *);
+                char* sval = va_arg(arg_ptr, char*);
                 scanf("%s", sval);
                 break;
             }
@@ -38,7 +38,7 @@ void minscanf(char* fmt, ...) {
                 break;
         }
     }
-    va_end(ap);
+    va_end(arg_ptr);
 }
 
 int main(void) {

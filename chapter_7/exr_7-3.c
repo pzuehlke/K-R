@@ -9,11 +9,11 @@
 #include <string.h>
 #include <stdarg.h>
 
-int minprintf(char* fmt, ...);  // `minprintf` will also return the char count
+int minprintf(char* format, ...);  // `minprintf` will also return the char count
 
 /* minprintf: minimal printf with variable argument list */
-int minprintf(char* fmt, ...) {
-    va_list ap;     /* points to each unnamed arg in turn */
+int minprintf(char* format, ...) {
+    va_list arg_ptr;     /* points to each unnamed arg in turn */
     char* p;
     char* sval;
     int ival;
@@ -21,8 +21,8 @@ int minprintf(char* fmt, ...) {
     unsigned uval;
     unsigned count = 0;
 
-    va_start(ap, fmt);  /* make ap point to 1st unnamed arg */
-    for (p = fmt; *p; p++) {
+    va_start(arg_ptr, format);  /* make arg_ptr point to 1st unnamed arg */
+    for (p = format; *p; p++) {
         if (*p != '%') {
             putchar(*p);
             ++count;
@@ -30,29 +30,29 @@ int minprintf(char* fmt, ...) {
         }
         switch (*++p) {
             case 'd':
-                ival = va_arg(ap, int);
+                ival = va_arg(arg_ptr, int);
                 count += printf("%d", ival);
                 break;
             case 'f':
-                dval = va_arg(ap, double);
+                dval = va_arg(arg_ptr, double);
                 count += printf("%f", dval);
                 break;
             case 's':
-                for (sval = va_arg(ap, char*); *sval; sval++) {
+                for (sval = va_arg(arg_ptr, char*); *sval; sval++) {
                     putchar(*sval);
                     ++count;
                 }
                 break;
             case 'o':
-                uval = va_arg(ap, unsigned);
+                uval = va_arg(arg_ptr, unsigned);
                 count += printf("%o", uval);
                 break;
             case 'x':
-                uval = va_arg(ap, unsigned);
+                uval = va_arg(arg_ptr, unsigned);
                 count += printf("%x", uval);
                 break;
             case 'u':
-                uval = va_arg(ap, unsigned);
+                uval = va_arg(arg_ptr, unsigned);
                 count += printf("%u", uval);
                 break;
             default:
@@ -61,7 +61,7 @@ int minprintf(char* fmt, ...) {
                 break;
         }
     }
-    va_end(ap);
+    va_end(arg_ptr);
 
     return count;
 }

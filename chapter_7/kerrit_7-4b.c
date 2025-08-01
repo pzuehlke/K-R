@@ -4,7 +4,7 @@
 
 #define MAXLINE 1000
 
-int my_getline(char line[], int maxline);
+int get_line(char line[], int maxline);
 
 int main()
 {
@@ -12,7 +12,7 @@ int main()
     char monthname[16];
     char line[MAXLINE];
 
-    while (my_getline(line, sizeof(line)) > 0) {
+    while (get_line(line, sizeof(line)) > 0) {
         if (sscanf(line, "%d %s %d", &day, monthname, &year) == 3) {
             printf("valid: %s\n", line);    // 25 Dec 1998 form
         } else if (sscanf(line, "%d/%d/%d", &month, &day, &year) == 3) {
@@ -27,7 +27,7 @@ int main()
 
 
 /* my_getline: read a line into s, return length */
-int my_getline(char s[], int lim) {
+int get_line(char s[], int lim) {
     int c, i;
     
     i = 0;

@@ -2,15 +2,16 @@
 
 #include <stdio.h>
 
-/* cat: concatenate files, version 1 */
-int main(int argc, char* argv)
-{
-    FILE *fp;
-    void filecopy(FILE*, FILE*);
+void filecopy(FILE*, FILE*);
 
-    if (argc == 1) {    // no arguments; copy standard input
+/* cat: concatenate files, version 1 */
+int main(int argc, char* argv[])
+{
+    FILE* fp;
+    if (argc == 1) {    /* no args; copy standard input */
         filecopy(stdin, stdout);
-    } else {
+    }
+    else {
         while (--argc > 0) {
             if ((fp = fopen(*++argv, "r")) == NULL) {
                 printf("cat: can't open %s\n", *argv);
@@ -25,7 +26,7 @@ int main(int argc, char* argv)
 }
 
 /* filecopy: copy file ifp to file ofp */
-void filecopy(FILE *ifp, FILE *ofp)
+void filecopy(FILE* ifp, FILE* ofp)
 {
     int c;
     while ((c = getc(ifp)) != EOF) {

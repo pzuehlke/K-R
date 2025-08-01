@@ -7,38 +7,40 @@
 void minprintf(char *fmt, ...);
 
 /* minprintf: minimial printf with variable argument list */
-void minprintf(char *fmt, ...)
+void minprintf(char* format, ...)
 {
-    va_list ap;     /* points to each unnamed arg in turn */
-    char * p, *sval;
+    va_list arg_ptr;    /* points to each unnamed argument in turn */
+    char* p;
+    char* sval;
     int ival;
     double dval;
 
-    va_start(ap, fmt);  /* make ap point to 1st unnamed arg */
-    for (p = fmt; *p; p++) {
+    va_start(arg_ptr, format);   /* make arg_ptr point to 1st unnamed arg */
+    for (p = format; *p; p++) {
         if (*p != '%') {
             putchar(*p);
             continue;
         }
-        switch (*++p) {
+        switch (*++p) { // encountered a '%', move to next character
             case 'd':
-                ival = va_arg(ap, int);
+                ival = va_arg(arg_ptr, int);
                 printf("%d", ival);
                 break;
             case 'f':
-                dval = va_arg(ap, double);
+                dval = va_arg(arg_ptr, double);
                 printf("%f", dval);
                 break;
             case 's':
-                for (sval = va_arg(ap, char*); *sval; sval++)
+                for (sval = va_arg(arg_ptr, char*); *sval; sval++) {
                     putchar(*sval);
+                }
                 break;
             default:
                 putchar(*p);
                 break;
         }
     }
-    va_end(ap);
+    va_end(arg_ptr);
 }
 
 /* main: testing function */

@@ -9,6 +9,8 @@
 
 #define MAXLINE 80
 
+/* compare_files: compare two files for equality, printing the first line where
+ * the differ. */
 int main(int argc, char* argv[])
 {
     if (argc < 3) {
@@ -39,7 +41,7 @@ int main(int argc, char* argv[])
         ++count;
         
         if (p1 != NULL && p2 != NULL && strcmp(line_1, line_2) != 0) {
-            printf("Mismatch in line %d:\nFile %s: %sFile %s: %s",
+            printf("Mismatch in line %d:\nFile %s: %s\nFile %s: %s\n",
                    count, argv[1], line_1, argv[2], line_2);
             fclose(file_1);
             fclose(file_2);
