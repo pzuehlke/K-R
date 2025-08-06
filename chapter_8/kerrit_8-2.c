@@ -1,4 +1,6 @@
 /* Following S. 8.2 of Kernighan and Ritchie, "The C Programming Language" */
+#include <stdio.h>
+#include <fcntl.h>
 #include "syscalls.h"
 
 /* main: copy input to output */
